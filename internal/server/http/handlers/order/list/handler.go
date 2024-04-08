@@ -37,9 +37,16 @@ func (h *Handler) Handle(params orderOperation.GetOrdersParams, i interface{}) m
 	)
 	ctx = mlog.CtxWithLogger(ctx, l)
 
-	filter := h.prepareCondition(params)
+	orderObj := convertors.Order(params.SortBy, params.SortDirection)
+	paginationObj := convertors.Paginator(params.Limit, params.Offset)
 
-	list, err := h.service.GetList(ctx, userID, filter)
+	list, err := h.service.GetList(
+		ctx,
+		userID,
+		option.Nil[orderModel.Filter](),
+		option.New([]*order.Order{orderObj}),
+		option.New(*paginationObj),
+	)
 	if err != nil {
 		l.Error("order get list failed", zap.Error(err))
 		return orderOperation.NewGetOrdersInternalServerError().WithPayload(&models.Error{
@@ -48,7 +55,7 @@ func (h *Handler) Handle(params orderOperation.GetOrdersParams, i interface{}) m
 		})
 	}
 
-	total, err := h.service.Count(ctx, userID, filter)
+	total, err := h.service.Count(ctx, userID, option.Nil[orderModel.Filter]())
 	if err != nil {
 		l.Error("get order count failed", zap.Error(err))
 		return orderOperation.NewGetOrdersInternalServerError().WithPayload(&models.Error{
@@ -57,34 +64,13 @@ func (h *Handler) Handle(params orderOperation.GetOrdersParams, i interface{}) m
 		})
 	}
 
-	pag := paginator.Pagination{}
-	if filter.Pagination.IsSet() {
-		pag = filter.Pagination.Value()
-	}
-
 	return orderOperation.NewGetOrdersOK().WithPayload(&models.GetOrdersResponse{
 		Orders: convertors.OrdersFromModel(list),
 		Pagination: convertors.Pagination(&paginator.PaginationResult{
-			Limit:  pag.Limit,
-			Offset: pag.Offset,
+			Limit:  paginationObj.Limit,
+			Offset: paginationObj.Offset,
 			Total:  total,
 		}),
 	})
 }
 
-func (h *Handler) prepareCondition(params orderOperation.GetOrdersParams) *orderModel.Filter {
-	filter := &orderModel.Filter{}
-
-	ordering := convertors.Order(params.SortBy, params.SortDirection)
-	pagination := convertors.Paginator(params.Limit, params.Offset)
-
-	if ordering != nil {
-		filter.Orders = option.New([]*order.Order{ordering})
-	}
-
-	if pagination != nil {
-		filter.Pagination = option.New(*pagination)
-	}
-
-	return filter
-}
