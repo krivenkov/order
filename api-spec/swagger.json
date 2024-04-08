@@ -398,7 +398,7 @@
             },
             "required": [
                 "id",
-                "text",
+                "name",
                 "description"
             ],
             "type": "object"
