@@ -20,4 +20,5 @@ type Filter struct {
 	IDs    option.Option[[]string]
 	Status option.Option[int]
 	UserID option.Option[string]
+	Q      option.Option[string]
 }

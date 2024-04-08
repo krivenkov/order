@@ -11,7 +11,7 @@ type commander struct {
 	esCli es.Client
 }
 
-func New(esCli es.Client) order.Commander {
+func NewCommander(esCli es.Client) order.Commander {
 	return &commander{
 		esCli: esCli,
 	}
