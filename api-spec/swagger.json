@@ -1,0 +1,546 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API specification for the order-api service",
+        "title": "order-api",
+        "version": "1.0.1"
+    },
+    "host": "127.0.0.1",
+    "basePath": "/order",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "default": 50,
+                        "in": "query",
+                        "maximum": 200,
+                        "minimum": 10,
+                        "name": "limit",
+                        "type": "number"
+                    },
+                    {
+                        "default": 0,
+                        "in": "query",
+                        "minimum": 0,
+                        "name": "offset",
+                        "type": "number"
+                    },
+                    {
+                        "default": "ts_create",
+                        "enum": [
+                            "ts_create",
+                            "name"
+                        ],
+                        "in": "query",
+                        "name": "sortBy",
+                        "type": "string"
+                    },
+                    {
+                        "default": "asc",
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "in": "query",
+                        "name": "sortDirection",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetOrdersResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "get-orders",
+                "summary": "Get a list of all orders"
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/CreateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CreateOrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "create-order",
+                "summary": "Create new order"
+            }
+        },
+        "/orders/{id}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "204": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "delete-order",
+                "summary": "Delete order"
+            },
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetOrderResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "get-order",
+                "summary": "Get order"
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateOrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "update-order",
+                "summary": "Update order"
+            }
+        },
+        "/orders/count": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "version",
+                        "type": "number"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetCountResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "tags": [
+                    "order"
+                ],
+                "operationId": "get-orders-count",
+                "summary": "Get a count of all orders"
+            }
+        }
+    },
+    "definitions": {
+        "Error": {
+            "properties": {
+                "error": {
+                    "enum": [
+                        "server_error",
+                        "access_denied",
+                        "invalid_grant",
+                        "not_found",
+                        "invalid_request"
+                    ],
+                    "type": "string"
+                },
+                "errorDescription": {
+                    "example": "Internal Server Error",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "error",
+                "errorDescription"
+            ],
+            "type": "object"
+        },
+        "Order": {
+            "properties": {
+                "id": {
+                    "example": "123e4567-e89b-12d3-a456-426614174000",
+                    "format": "uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the order.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "The description of the order.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "text",
+                "description"
+            ],
+            "type": "object"
+        },
+        "GetOrderResponse": {
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/Order"
+                }
+            },
+            "required": [
+                "order"
+            ],
+            "type": "object"
+        },
+        "GetOrdersResponse": {
+            "properties": {
+                "orders": {
+                    "items": {
+                        "$ref": "#/definitions/Order"
+                    },
+                    "type": "array"
+                },
+                "pagination": {
+                    "$ref": "#/definitions/Pagination"
+                }
+            },
+            "required": [
+                "orders",
+                "pagination"
+            ],
+            "type": "object"
+        },
+        "GetCountResponse": {
+            "properties": {
+                "count": {
+                    "description": "Content version id of the order.",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "count"
+            ],
+            "type": "object"
+        },
+        "CreateOrderRequest": {
+            "properties": {
+                "name": {
+                    "description": "The name of the order.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "The description of the order.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "description"
+            ],
+            "type": "object"
+        },
+        "CreateOrderResponse": {
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/Order"
+                }
+            },
+            "required": [
+                "order"
+            ],
+            "type": "object"
+        },
+        "UpdateOrderRequest": {
+            "properties": {
+                "name": {
+                    "description": "The name of the order.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "The description of the order.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "description"
+            ],
+            "type": "object"
+        },
+        "UpdateOrderResponse": {
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/Order"
+                }
+            },
+            "required": [
+                "order"
+            ],
+            "type": "object"
+        },
+        "Pagination": {
+            "properties": {
+                "limit": {
+                    "default": 1,
+                    "description": "limit of orders",
+                    "minimum": 1,
+                    "type": "number"
+                },
+                "offset": {
+                    "default": 1,
+                    "description": "offset",
+                    "minimum": 1,
+                    "type": "number"
+                },
+                "total": {
+                    "description": "Total items",
+                    "minimum": 0,
+                    "type": "number"
+                }
+            },
+            "required": [
+                "limit",
+                "offset",
+                "total"
+            ],
+            "title": "Pagination",
+            "type": "object"
+        }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "description": "JSON Web Token",
+            "in": "header",
+            "name": "Authorization",
+            "type": "apiKey"
+        }
+    },
+    "tags": [
+        {
+            "name": "order"
+        }
+    ],
+    "x-components": {}
+}
