@@ -9,18 +9,11 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
-
-	"github.com/go-openapi/swag"
 )
 
 // GetOrdersCountURL generates an URL for the get orders count operation
 type GetOrdersCountURL struct {
-	Content *string
-	Version *float64
-
 	_basePath string
-	// avoid unkeyed usage
-	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -49,26 +42,6 @@ func (o *GetOrdersCountURL) Build() (*url.URL, error) {
 		_basePath = "/order"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
-
-	qs := make(url.Values)
-
-	var contentQ string
-	if o.Content != nil {
-		contentQ = *o.Content
-	}
-	if contentQ != "" {
-		qs.Set("content", contentQ)
-	}
-
-	var versionQ string
-	if o.Version != nil {
-		versionQ = swag.FormatFloat64(*o.Version)
-	}
-	if versionQ != "" {
-		qs.Set("version", versionQ)
-	}
-
-	_result.RawQuery = qs.Encode()
 
 	return &_result, nil
 }

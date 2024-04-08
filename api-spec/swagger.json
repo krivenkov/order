@@ -312,16 +312,6 @@
                     "application/json"
                 ],
                 "parameters": [
-                    {
-                        "in": "query",
-                        "name": "version",
-                        "type": "number"
-                    },
-                    {
-                        "in": "query",
-                        "name": "content",
-                        "type": "string"
-                    }
                 ],
                 "responses": {
                     "200": {

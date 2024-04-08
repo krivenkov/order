@@ -171,18 +171,6 @@ func init() {
         ],
         "summary": "Get a count of all orders",
         "operationId": "get-orders-count",
-        "parameters": [
-          {
-            "type": "number",
-            "name": "version",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "name": "content",
-            "in": "query"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -714,18 +702,6 @@ func init() {
         ],
         "summary": "Get a count of all orders",
         "operationId": "get-orders-count",
-        "parameters": [
-          {
-            "type": "number",
-            "name": "version",
-            "in": "query"
-          },
-          {
-            "type": "string",
-            "name": "content",
-            "in": "query"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",

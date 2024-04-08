@@ -21,3 +21,18 @@ type Order struct {
 	Name        string
 	Description string
 }
+
+func (o *Order) FillForm(f *Form) {
+	if f.Name != nil {
+		o.Name = *f.Name
+	}
+
+	if f.Description != nil {
+		o.Name = *f.Description
+	}
+}
+
+type Form struct {
+	Name        *string
+	Description *string
+}
