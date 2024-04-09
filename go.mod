@@ -16,7 +16,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/krivenkov/pkg v0.0.0-20240408155246-f1cd79a66c96
+	github.com/krivenkov/pkg v0.0.1
 	github.com/olivere/elastic/v7 v7.0.32
 	go.uber.org/fx v1.21.0
 	go.uber.org/zap v1.27.0

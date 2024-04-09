@@ -53,9 +53,17 @@ func (q *querier) GetItem(ctx context.Context, filter option.Option[orderModel.F
 }
 
 func (q *querier) Count(ctx context.Context, filter option.Option[orderModel.Filter]) (int, error) {
-	// TODO: add es count
+	boolQuery := q.prepareQuery(filter)
 
-	return 0, nil
+	res, err := q.esCli.GetCount(ctx, &es.GetCountRequest{
+		Index: indexName,
+		Query: boolQuery,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return res, nil
 }
 
 func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.Filter], orders option.Option[[]*order.Order], pagination option.Option[paginator.Pagination]) ([]*orderModel.Order, error) {
