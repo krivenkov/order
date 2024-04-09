@@ -35,5 +35,5 @@ func (j *JWT) Handle(tokenStr string) (interface{}, error) {
 	// 	return nil, errors.New("internal error")
 	// }
 
-	return uuid.New(), nil
+	return uuid.New().String(), nil
 }

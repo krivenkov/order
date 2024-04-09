@@ -14,7 +14,7 @@ func init() {
 }
 
 const (
-	tableName = `order.items`
+	tableName = `"order".items`
 )
 
 type dto struct {

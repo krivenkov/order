@@ -31,8 +31,8 @@ type Params struct {
 	QrEs  orderModel.Querier   `name:"order_es_qr"`
 
 	TXer  txer.TXer
-	now   func() time.Time
-	newID func() uuid.UUID
+	Now   func() time.Time
+	NewID func() uuid.UUID
 }
 
 func New(params Params) orderModel.Service {
@@ -42,8 +42,8 @@ func New(params Params) orderModel.Service {
 		qrPg:  params.QrPg,
 		qrEs:  params.QrEs,
 		tXer:  params.TXer,
-		now:   params.now,
-		newID: params.newID,
+		now:   params.Now,
+		newID: params.NewID,
 	}
 }
 

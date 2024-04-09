@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/krivenkov/pkg/clients/database"
+	"github.com/krivenkov/pkg/clients/es"
 	"github.com/krivenkov/pkg/global"
 	"github.com/krivenkov/pkg/mcfg"
 	"github.com/krivenkov/pkg/mlog"
@@ -19,6 +20,7 @@ var FXBaseModule = fx.Options(
 
 		database.NewPgxPool,
 		database.NewTXerFX,
+		es.NewClient,
 	),
 
 	fx.Supply(

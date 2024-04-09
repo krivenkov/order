@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/krivenkov/order/internal/model/order"
+	"github.com/krivenkov/order/internal/service/order"
 	"go.uber.org/fx"
 )
 
