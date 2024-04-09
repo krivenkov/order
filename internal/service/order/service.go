@@ -170,6 +170,35 @@ func (s *service) Count(ctx context.Context, userID string, req *orderModel.GetC
 	return s.qrPg.Count(ctx, option.New(*filter))
 }
 
+func (s *service) InnerGetItem(ctx context.Context, req *orderModel.InnerGetItemRequest) (*orderModel.Order, error) {
+	item, err := s.qrPg.GetItem(ctx, option.New(orderModel.Filter{
+		IDs:    req.IDs,
+		UserID: req.UserID,
+	}))
+	if err != nil {
+		return nil, fmt.Errorf("get item: %w", err)
+	}
+
+	return item, nil
+}
+
+func (s *service) InnerGetList(ctx context.Context, req *orderModel.InnerGetListRequest) ([]*orderModel.Order, error) {
+	filter := s.prepareInnerListCondition(req)
+
+	return s.qrPg.GetList(ctx, option.New(*filter), req.Orders, req.Pagination)
+}
+
+func (s *service) prepareInnerListCondition(req *orderModel.InnerGetListRequest) *orderModel.Filter {
+	if req == nil {
+		return &orderModel.Filter{}
+	}
+
+	return &orderModel.Filter{
+		UserID: req.UserID,
+		IDs:    req.IDs,
+	}
+}
+
 func (s *service) prepareListCondition(userID string, req *orderModel.GetListRequest) *orderModel.Filter {
 	filter := &orderModel.Filter{
 		Status: option.New(int(orderModel.StatusCreated)),
