@@ -22,16 +22,12 @@ type Service interface {
 
 type GetListRequest struct {
 	IDs        option.Option[[]string]
-	Status     option.Option[int]
-	UserID     option.Option[string]
 	Q          option.Option[string]
 	Orders     option.Option[[]*order.Order]
 	Pagination option.Option[paginator.Pagination]
 }
 
 type GetCountRequest struct {
-	IDs    option.Option[[]string]
-	Status option.Option[int]
-	UserID option.Option[string]
-	Q      option.Option[string]
+	IDs option.Option[[]string]
+	Q   option.Option[string]
 }

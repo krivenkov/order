@@ -1,13 +1,16 @@
 package order
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Status int
 
 const (
 	StatusCreated Status = 1
 	StatusDeleted Status = 2
-	StatusPayed   Status = 3
 )
 
 type Order struct {
@@ -20,6 +23,16 @@ type Order struct {
 
 	Name        string
 	Description string
+}
+
+func New(userID string, now func() time.Time, newID func() uuid.UUID) *Order {
+	return &Order{
+		ID:       newID().String(),
+		TSCreate: now(),
+		TSModify: now(),
+		Status:   StatusCreated,
+		UserID:   userID,
+	}
 }
 
 func (o *Order) FillForm(f *Form) {
