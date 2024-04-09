@@ -26,7 +26,7 @@ func NewGetOrdersParams() GetOrdersParams {
 		limitDefault  = float64(50)
 		offsetDefault = float64(0)
 
-		sortByDefault        = string("ts_create")
+		sortByDefault        = string("name")
 		sortDirectionDefault = string("asc")
 	)
 
@@ -69,7 +69,7 @@ type GetOrdersParams struct {
 	Q *string
 	/*
 	  In: query
-	  Default: "ts_create"
+	  Default: "name"
 	*/
 	SortBy *string
 	/*
@@ -244,7 +244,7 @@ func (o *GetOrdersParams) bindSortBy(rawData []string, hasKey bool, formats strf
 // validateSortBy carries on validations for parameter SortBy
 func (o *GetOrdersParams) validateSortBy(formats strfmt.Registry) error {
 
-	if err := validate.EnumCase("sortBy", "query", *o.SortBy, []interface{}{"ts_create", "name"}, true); err != nil {
+	if err := validate.EnumCase("sortBy", "query", *o.SortBy, []interface{}{"id", "name"}, true); err != nil {
 		return err
 	}
 

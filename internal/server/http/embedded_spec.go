@@ -67,11 +67,11 @@ func init() {
           },
           {
             "enum": [
-              "ts_create",
+              "id",
               "name"
             ],
             "type": "string",
-            "default": "ts_create",
+            "default": "name",
             "name": "sortBy",
             "in": "query"
           },
@@ -609,11 +609,11 @@ func init() {
           },
           {
             "enum": [
-              "ts_create",
+              "id",
               "name"
             ],
             "type": "string",
-            "default": "ts_create",
+            "default": "name",
             "name": "sortBy",
             "in": "query"
           },

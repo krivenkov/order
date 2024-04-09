@@ -38,9 +38,9 @@
                         "type": "string"
                     },
                     {
-                        "default": "ts_create",
+                        "default": "name",
                         "enum": [
-                            "ts_create",
+                            "id",
                             "name"
                         ],
                         "in": "query",
