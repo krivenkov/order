@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+//Union//
+
+enum OrderItemStatus {
+    StatusUnknown = 0;
+    StatusCreated = 1;
+    StatusDeleted = 2;
+}
+
+
+message OrderItem {
+    // UUID
+    string id = 1;
+    // Enum
+    OrderItemStatus status = 2;
+    // Record creation date
+    google.protobuf.Timestamp ts_create = 3;
+    // Record modification date
+    google.protobuf.Timestamp ts_modify = 4;
+
+    // UUID
+    string user_id = 11;
+    // Record name
+    string name = 12;
+    // Record description
+    string description = 13;
+}
+
+message OrderItemFilter {
+    repeated string ids = 1;
+    string user_id = 2;
+}

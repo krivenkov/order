@@ -1,0 +1,2 @@
+protoc                  v3.17.3
+protoc-gen-go           v1.25.0

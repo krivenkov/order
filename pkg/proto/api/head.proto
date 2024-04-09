@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package order.api;
+
+option go_package = "github.com/krivenkov/order/pkg/api";
+
+import "google/protobuf/timestamp.proto";

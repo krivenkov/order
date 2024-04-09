@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+//Union//
+
+service OrderService {
+    rpc GetOrderItem (OrderItemRequest) returns (OrderItemResponse) {}
+    rpc GetOrderItemList (OrderItemListRequest) returns (OrderItemListResponse) {}
+}
+
+// -------------------------------------
+//            Specifications:
+// -------------------------------------
+
+// OrderItem:
+
+message OrderItemRequest {
+    OrderItemFilter filter = 1;
+}
+
+message OrderItemResponse {
+    OrderItem value = 1;
+}
+
+message OrderItemListRequest {
+    OrderItemFilter filter = 1;
+    repeated Order orders = 2;
+    optional Pagination pagination = 3;
+}
+
+message OrderItemListResponse {
+    repeated OrderItem value = 1;
+}
