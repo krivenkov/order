@@ -15,7 +15,23 @@ type Service interface {
 	Update(ctx context.Context, userID, id string, form *Form) (*Order, error)
 	SoftDelete(ctx context.Context, userID, id string) error
 
-	GetList(ctx context.Context, userID string, filter option.Option[Filter], orders option.Option[[]*order.Order], pagination option.Option[paginator.Pagination]) ([]*Order, error)
 	GetItem(ctx context.Context, userID string, id string) (*Order, error)
-	Count(ctx context.Context, userID string, filter option.Option[Filter]) (int, error)
+	GetList(ctx context.Context, userID string, req *GetListRequest) ([]*Order, error)
+	Count(ctx context.Context, userID string, req *GetCountRequest) (int, error)
+}
+
+type GetListRequest struct {
+	IDs        option.Option[[]string]
+	Status     option.Option[int]
+	UserID     option.Option[string]
+	Q          option.Option[string]
+	Orders     option.Option[[]*order.Order]
+	Pagination option.Option[paginator.Pagination]
+}
+
+type GetCountRequest struct {
+	IDs    option.Option[[]string]
+	Status option.Option[int]
+	UserID option.Option[string]
+	Q      option.Option[string]
 }
