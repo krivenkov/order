@@ -139,9 +139,13 @@ func (q *querier) prepare(sb squirrel.SelectBuilder, filter option.Option[orderM
 	}
 
 	if orders.IsSet() {
-		var ordersStr []string
+		prepareOrders, err := q.prepareOrder(orders.Value())
+		if err != nil {
+			return sb, err
+		}
 
-		for _, val := range orders.Value() {
+		var ordersStr []string
+		for _, val := range prepareOrders {
 			ordersStr = append(ordersStr, val.Column+" "+val.Direction)
 		}
 
@@ -177,4 +181,28 @@ func (q *querier) prepareBase(builder squirrel.SelectBuilder, filter option.Opti
 	builder = builder.Where(where)
 
 	return builder
+}
+
+func (q *querier) prepareOrder(orders []*order.Order) ([]*order.Order, error) {
+	esOrders := make([]*order.Order, 0, len(orders))
+
+	for _, val := range orders {
+		switch val.Column {
+		case orderModel.NameSortKey:
+			esOrders = append(esOrders, &order.Order{
+				Column:    nameSortKey,
+				Direction: val.Direction,
+			})
+		case orderModel.IDSortKey:
+			esOrders = append(esOrders, &order.Order{
+				Column:    idSortKey,
+				Direction: val.Direction,
+			})
+		default:
+			return nil, fmt.Errorf("invalid sort column = %s", val.Column)
+		}
+
+	}
+
+	return esOrders, nil
 }

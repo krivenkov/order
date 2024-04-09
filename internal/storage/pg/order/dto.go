@@ -15,6 +15,9 @@ func init() {
 
 const (
 	tableName = `"order".items`
+
+	nameSortKey = "name"
+	idSortKey   = "id"
 )
 
 type dto struct {

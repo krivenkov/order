@@ -13,6 +13,11 @@ const (
 	StatusDeleted Status = 2
 )
 
+const (
+	NameSortKey = "name"
+	IDSortKey   = "id"
+)
+
 type Order struct {
 	ID       string
 	TSCreate time.Time

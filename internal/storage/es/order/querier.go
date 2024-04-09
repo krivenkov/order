@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/krivenkov/order/internal/model"
 	orderModel "github.com/krivenkov/order/internal/model/order"
@@ -71,11 +72,13 @@ func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.F
 
 	boolQuery := q.prepareQuery(filter)
 
+	esOrders, err := q.prepareOrder(orders.Value())
+
 	res, err := q.esCli.GetSearch(ctx, &es.GetSearchRequest{
 		Index:         indexName,
 		Query:         boolQuery,
 		IncludeFields: option.New([]string{"id", "status", "name", "description"}),
-		Orders:        orders,
+		Orders:        option.New(esOrders),
 		Pagination:    pagination,
 	})
 	if err != nil {
@@ -154,4 +157,28 @@ func (q *querier) prepareQuery(filter option.Option[orderModel.Filter]) *elastic
 	}
 
 	return boolQuery
+}
+
+func (q *querier) prepareOrder(orders []*order.Order) ([]*order.Order, error) {
+	esOrders := make([]*order.Order, 0, len(orders))
+
+	for _, val := range orders {
+		switch val.Column {
+		case orderModel.NameSortKey:
+			esOrders = append(esOrders, &order.Order{
+				Column:    nameSortKey,
+				Direction: val.Direction,
+			})
+		case orderModel.IDSortKey:
+			esOrders = append(esOrders, &order.Order{
+				Column:    idSortKey,
+				Direction: val.Direction,
+			})
+		default:
+			return nil, fmt.Errorf("invalid sort column = %s", val.Column)
+		}
+
+	}
+
+	return esOrders, nil
 }

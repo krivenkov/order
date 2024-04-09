@@ -6,6 +6,9 @@ import (
 
 const (
 	indexName = "order"
+
+	nameSortKey = "name.keyword"
+	idSortKey   = "id"
 )
 
 type dto struct {
