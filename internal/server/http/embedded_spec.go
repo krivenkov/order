@@ -93,6 +93,12 @@ func init() {
               "$ref": "#/definitions/GetOrdersResponse"
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "schema": {
@@ -627,6 +633,12 @@ func init() {
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/GetOrdersResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "401": {

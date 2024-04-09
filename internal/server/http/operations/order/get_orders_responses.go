@@ -58,6 +58,51 @@ func (o *GetOrdersOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 	}
 }
 
+// GetOrdersBadRequestCode is the HTTP code returned for type GetOrdersBadRequest
+const GetOrdersBadRequestCode int = 400
+
+/*
+GetOrdersBadRequest Bad Request
+
+swagger:response getOrdersBadRequest
+*/
+type GetOrdersBadRequest struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewGetOrdersBadRequest creates GetOrdersBadRequest with default headers values
+func NewGetOrdersBadRequest() *GetOrdersBadRequest {
+
+	return &GetOrdersBadRequest{}
+}
+
+// WithPayload adds the payload to the get orders bad request response
+func (o *GetOrdersBadRequest) WithPayload(payload *models.Error) *GetOrdersBadRequest {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get orders bad request response
+func (o *GetOrdersBadRequest) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetOrdersBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(400)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // GetOrdersUnauthorizedCode is the HTTP code returned for type GetOrdersUnauthorized
 const GetOrdersUnauthorizedCode int = 401
 

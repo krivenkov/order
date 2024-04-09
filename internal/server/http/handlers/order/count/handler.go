@@ -6,7 +6,6 @@ import (
 	"github.com/krivenkov/order/internal/server/http/models"
 	"github.com/krivenkov/order/internal/server/http/operations/order"
 	"github.com/krivenkov/pkg/mlog"
-	"github.com/krivenkov/pkg/option"
 	"github.com/krivenkov/pkg/ptr"
 	"go.uber.org/zap"
 )
@@ -30,7 +29,7 @@ func (h *Handler) Handle(params order.GetOrdersCountParams, i interface{}) middl
 	)
 	ctx = mlog.CtxWithLogger(ctx, l)
 
-	count, err := h.service.Count(ctx, userID, option.Nil[orderModel.Filter]())
+	count, err := h.service.Count(ctx, userID, h.prepareCountCondition(params))
 	if err != nil {
 		l.Error("get order count failed", zap.Error(err))
 
@@ -43,4 +42,8 @@ func (h *Handler) Handle(params order.GetOrdersCountParams, i interface{}) middl
 	return order.NewGetOrdersCountOK().WithPayload(&models.GetCountResponse{
 		Count: ptr.Pointer(int64(count)),
 	})
+}
+
+func (h *Handler) prepareCountCondition(_ order.GetOrdersCountParams) *orderModel.GetCountRequest {
+	return &orderModel.GetCountRequest{}
 }
