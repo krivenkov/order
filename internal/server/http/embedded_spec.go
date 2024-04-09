@@ -61,6 +61,11 @@ func init() {
             "in": "query"
           },
           {
+            "type": "string",
+            "name": "q",
+            "in": "query"
+          },
+          {
             "enum": [
               "ts_create",
               "name"
@@ -589,6 +594,11 @@ func init() {
             "type": "number",
             "default": 0,
             "name": "offset",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "name": "q",
             "in": "query"
           },
           {

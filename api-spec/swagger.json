@@ -33,6 +33,11 @@
                         "type": "number"
                     },
                     {
+                        "in": "query",
+                        "name": "q",
+                        "type": "string"
+                    },
+                    {
                         "default": "ts_create",
                         "enum": [
                             "ts_create",

@@ -17,6 +17,7 @@ import (
 type GetOrdersURL struct {
 	Limit         *float64
 	Offset        *float64
+	Q             *string
 	SortBy        *string
 	SortDirection *string
 
@@ -68,6 +69,14 @@ func (o *GetOrdersURL) Build() (*url.URL, error) {
 	}
 	if offsetQ != "" {
 		qs.Set("offset", offsetQ)
+	}
+
+	var qQ string
+	if o.Q != nil {
+		qQ = *o.Q
+	}
+	if qQ != "" {
+		qs.Set("q", qQ)
 	}
 
 	var sortByQ string

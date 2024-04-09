@@ -23,8 +23,9 @@ func NewGetOrdersParams() GetOrdersParams {
 	var (
 		// initialize parameters with default values
 
-		limitDefault         = float64(50)
-		offsetDefault        = float64(0)
+		limitDefault  = float64(50)
+		offsetDefault = float64(0)
+
 		sortByDefault        = string("ts_create")
 		sortDirectionDefault = string("asc")
 	)
@@ -64,6 +65,10 @@ type GetOrdersParams struct {
 	Offset *float64
 	/*
 	  In: query
+	*/
+	Q *string
+	/*
+	  In: query
 	  Default: "ts_create"
 	*/
 	SortBy *string
@@ -92,6 +97,11 @@ func (o *GetOrdersParams) BindRequest(r *http.Request, route *middleware.Matched
 
 	qOffset, qhkOffset, _ := qs.GetOK("offset")
 	if err := o.bindOffset(qOffset, qhkOffset, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qQ, qhkQ, _ := qs.GetOK("q")
+	if err := o.bindQ(qQ, qhkQ, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -186,6 +196,24 @@ func (o *GetOrdersParams) validateOffset(formats strfmt.Registry) error {
 	if err := validate.Minimum("offset", "query", *o.Offset, 0, false); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// bindQ binds and validates parameter Q from query.
+func (o *GetOrdersParams) bindQ(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+	o.Q = &raw
 
 	return nil
 }
