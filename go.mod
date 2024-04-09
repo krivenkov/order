@@ -11,14 +11,13 @@ require (
 	github.com/go-openapi/strfmt v0.23.0
 	github.com/go-openapi/swag v0.23.0
 	github.com/go-openapi/validate v0.24.0
-	github.com/golang/mock v1.6.0
 	github.com/golang/protobuf v1.5.4
 	github.com/google/uuid v1.6.0
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/krivenkov/pkg v0.0.0-20240408155246-f1cd79a66c96
 	github.com/olivere/elastic/v7 v7.0.32
-	gitlab.bred.team/bre-back/collection-api v0.0.0-20240229112346-6de8e904e432
 	go.uber.org/fx v1.21.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.21.0
@@ -49,6 +48,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/shopspring/decimal v1.3.1 // indirect
 	go.mongodb.org/mongo-driver v1.14.0 // indirect
 	go.uber.org/dig v1.17.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect

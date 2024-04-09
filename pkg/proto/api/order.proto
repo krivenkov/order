@@ -29,5 +29,5 @@ message OrderItem {
 
 message OrderItemFilter {
     repeated string ids = 1;
-    string user_id = 2;
+    optional string user_id = 2;
 }

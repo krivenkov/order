@@ -18,6 +18,11 @@ type Service interface {
 	GetItem(ctx context.Context, userID string, id string) (*Order, error)
 	GetList(ctx context.Context, userID string, req *GetListRequest) ([]*Order, error)
 	Count(ctx context.Context, userID string, req *GetCountRequest) (int, error)
+
+	// InnerGetItem used in internal GRPC server, without ACL
+	InnerGetItem(ctx context.Context, filter *InnerGetItemRequest) (*Order, error)
+	// InnerGetList used in internal GRPC server, without ACL
+	InnerGetList(ctx context.Context, filter *InnerGetListRequest) ([]*Order, error)
 }
 
 type GetListRequest struct {
@@ -30,4 +35,16 @@ type GetListRequest struct {
 type GetCountRequest struct {
 	IDs option.Option[[]string]
 	Q   option.Option[string]
+}
+
+type InnerGetItemRequest struct {
+	IDs    option.Option[[]string]
+	UserID option.Option[string]
+}
+
+type InnerGetListRequest struct {
+	IDs        option.Option[[]string]
+	UserID     option.Option[string]
+	Orders     option.Option[[]*order.Order]
+	Pagination option.Option[paginator.Pagination]
 }
