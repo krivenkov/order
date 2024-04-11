@@ -3,6 +3,9 @@
 This repository contains service designed to prepare order's data.
 And also it provides grpc/http api for order.
 
+## Listen to events
+- User update (user.update.user.1)
+
 ## Interfaces
 
 ### GRPC
@@ -16,6 +19,7 @@ And also it provides grpc/http api for order.
 - Postgres
 - ElasticSearch
 - Keycloak
+- Fafka
 
 ## Database migration
 resides in `scripts/migrate/postgres`
