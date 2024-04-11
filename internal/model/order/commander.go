@@ -10,4 +10,5 @@ type Commander interface {
 	Create(ctx context.Context, item *Order) error
 	Update(ctx context.Context, item *Order) error
 	Delete(ctx context.Context, item *Order) error
+	Disable(ctx context.Context, userID string) error
 }

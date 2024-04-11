@@ -52,6 +52,15 @@ func (c *commander) Delete(ctx context.Context, item *order.Order) error {
 	return c.exec(ctx, b)
 }
 
+func (c *commander) Disable(ctx context.Context, userID string) error {
+	b := squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar).
+		Update(tableName).
+		Set("status", order.StatusDeleted).
+		Where(squirrel.Eq{"user_id": userID})
+
+	return c.exec(ctx, b)
+}
+
 func (c *commander) exec(ctx context.Context, sq squirrel.Sqlizer) error {
 	sql, args, err := sq.ToSql()
 	if err != nil {

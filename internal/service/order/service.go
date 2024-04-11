@@ -134,6 +134,24 @@ func (s *service) SoftDelete(ctx context.Context, userID, id string) error {
 	return nil
 }
 
+func (s *service) Disable(ctx context.Context, userID string) error {
+	if errTx := s.tXer.WithTX(ctx, func(ctx context.Context) error {
+		if err := s.cmdPg.Disable(ctx, userID); err != nil {
+			return fmt.Errorf("disable orders: %w", err)
+		}
+
+		if err := s.cmdEs.Disable(ctx, userID); err != nil {
+			return fmt.Errorf("disable orders: %w", err)
+		}
+
+		return nil
+	}); errTx != nil {
+		return errTx
+	}
+
+	return nil
+}
+
 func (s *service) GetList(ctx context.Context, userID string, req *orderModel.GetListRequest) ([]*orderModel.Order, error) {
 	filter := s.prepareListCondition(userID, req)
 
