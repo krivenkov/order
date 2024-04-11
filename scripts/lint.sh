@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version="v1.54.1"
+version="v1.55.1"
 gobin=${GOPATH}/bin
 binpath=${gobin}/golangci-lint-${version}
 
