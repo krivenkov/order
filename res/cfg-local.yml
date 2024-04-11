@@ -1,0 +1,53 @@
+log:
+  level: debug
+  encode: console
+  caller: full
+
+db:
+  host: 127.0.0.1
+  port: 5432
+  database: order
+  username: krivenkov
+  password:
+  max_open_conns: 10
+  enable_logger: true
+  logger_level: debug
+  statement_cache_mode: describe
+
+es:
+  addresses:
+    - "http://127.0.0.1:9200"
+
+bus:
+  transport: "franz"
+  franz:
+    addresses:
+      - "http://127.0.0.1:9092"
+    read_backoff_min: 10ms
+    read_backoff_max: 100ms
+    heartbeat_interval: 3s
+    session_timeout: 30s
+    max_wait: 100ms
+    batch_timeout: 30ms
+    watch_partition_changes: true
+    fetch_max_bytes: 209715200
+    broker_max_read_bytes: 419430400
+
+auth:
+  enable_auth_dispatcher: true
+  keycloak:
+    base_url: "http://127.0.0.1:9007"
+    realm: "BRE"
+    admin:
+      username: k-admin
+      password: BRE_admin_pass
+
+server:
+  bus:
+    worker_id: order_local
+  http:
+    host: 127.0.0.1
+    port: 8080
+  grpc:
+    host: 0.0.0.0
+    port: 9090
