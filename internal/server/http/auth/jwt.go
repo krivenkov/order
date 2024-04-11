@@ -1,39 +1,45 @@
 package auth
 
 import (
-	"github.com/google/uuid"
+	"context"
+	"errors"
+
+	"github.com/krivenkov/pkg/auth"
 	"go.uber.org/zap"
 )
 
-// const prefix = "Bearer "
-
 type JWT struct {
-	// tokenizer *tokenizer.Tokenizer
-	logger *zap.Logger
+	authCli *auth.Client
+	logger  *zap.Logger
 }
 
-func NewJWT(logger *zap.Logger) *JWT {
+func NewJWT(logger *zap.Logger, authCli *auth.Client) *JWT {
 	return &JWT{
-		logger: logger,
+		logger:  logger,
+		authCli: authCli,
 	}
 }
 
 func (j *JWT) Handle(tokenStr string) (interface{}, error) {
-	// tokenStr = strings.TrimPrefix(tokenStr, prefix)
+	session, err := j.authCli.SessionFromToken(tokenStr)
+	if err != nil {
+		if errors.Is(err, auth.ErrNoUserFound) {
+			return nil, ErrInvalidGrand{
+				Description: "access token: " + err.Error(),
+			}
+		}
 
-	// TODO: add check
-	// tok, err := j.tokenizer.Parse(tokenizer.TypeAccess, tokenStr)
-	// if err != nil {
-	// 	if brerr.As[tokenizer.ValidationError](err) {
-	// 		return nil, ErrInvalidGrand{
-	// 			Description: "access token: " + err.Error(),
-	// 		}
-	// 	}
-	//
-	// 	j.logger.Error("error parse jwt token", zap.String("token", tokenStr), zap.Error(err))
-	//
-	// 	return nil, errors.New("internal error")
-	// }
+		j.logger.Error("error parse jwt token", zap.String("token", tokenStr), zap.Error(err))
 
-	return uuid.New().String(), nil
+		return nil, errors.New("internal error")
+	}
+
+	user, err := j.authCli.ExtractUserByUsername(context.Background(), session.PreferredUsername)
+	if err != nil {
+		return nil, ErrInvalidGrand{
+			Description: "access token: " + err.Error(),
+		}
+	}
+
+	return user.ID, nil
 }

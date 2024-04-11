@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/go-openapi/errors"
+	"github.com/krivenkov/order/internal/server/http/auth"
 	"github.com/krivenkov/order/internal/server/http/models"
 	"github.com/krivenkov/pkg/ptr"
 )
@@ -17,10 +18,9 @@ func serveError(rw http.ResponseWriter, r *http.Request, err error) {
 	rw.Header().Set("Content-Type", "application/json")
 
 	switch e := err.(type) {
-	// TODO: return
-	// case auth.ErrInvalidGrand:
-	// 	rw.WriteHeader(http.StatusUnauthorized)
-	// 	_, _ = rw.Write(errorAsJSON(errors.New(http.StatusUnauthorized, e.Description)))
+	case auth.ErrInvalidGrand:
+		rw.WriteHeader(http.StatusUnauthorized)
+		_, _ = rw.Write(errorAsJSON(errors.New(http.StatusUnauthorized, e.Description)))
 	case errors.Error:
 		value := reflect.ValueOf(e)
 		if value.Kind() == reflect.Ptr && value.IsNil() {

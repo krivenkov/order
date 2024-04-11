@@ -73,6 +73,9 @@ func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.F
 	boolQuery := q.prepareQuery(filter)
 
 	esOrders, err := q.prepareOrder(orders.Value())
+	if err != nil {
+		return nil, err
+	}
 
 	res, err := q.esCli.GetSearch(ctx, &es.GetSearchRequest{
 		Index:         indexName,
