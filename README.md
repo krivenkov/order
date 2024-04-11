@@ -17,6 +17,12 @@ And also it provides grpc/http api for order.
 - ElasticSearch
 - Keycloak
 
+## Database migration
+resides in `scripts/migrate/postgres`
+
+## Elastic mappings
+resides in `scripts/migrate/elastic`
+
 ## Tests
 You can start tests with command
 ```
