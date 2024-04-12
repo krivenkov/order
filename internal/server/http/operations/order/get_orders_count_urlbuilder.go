@@ -13,7 +13,11 @@ import (
 
 // GetOrdersCountURL generates an URL for the get orders count operation
 type GetOrdersCountURL struct {
+	Q *string
+
 	_basePath string
+	// avoid unkeyed usage
+	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
@@ -42,6 +46,18 @@ func (o *GetOrdersCountURL) Build() (*url.URL, error) {
 		_basePath = "/api/v1/order"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
+
+	qs := make(url.Values)
+
+	var qQ string
+	if o.Q != nil {
+		qQ = *o.Q
+	}
+	if qQ != "" {
+		qs.Set("q", qQ)
+	}
+
+	_result.RawQuery = qs.Encode()
 
 	return &_result, nil
 }

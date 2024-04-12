@@ -323,6 +323,11 @@
                     "application/json"
                 ],
                 "parameters": [
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {

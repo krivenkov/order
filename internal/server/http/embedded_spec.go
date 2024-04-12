@@ -182,6 +182,13 @@ func init() {
         ],
         "summary": "Get a count of all orders",
         "operationId": "get-orders-count",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "q",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -724,6 +731,13 @@ func init() {
         ],
         "summary": "Get a count of all orders",
         "operationId": "get-orders-count",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "q",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",

@@ -6,6 +6,7 @@ import (
 	"github.com/krivenkov/order/internal/server/http/models"
 	"github.com/krivenkov/order/internal/server/http/operations/order"
 	"github.com/krivenkov/pkg/mlog"
+	"github.com/krivenkov/pkg/option"
 	"github.com/krivenkov/pkg/ptr"
 	"go.uber.org/zap"
 )
@@ -44,6 +45,12 @@ func (h *Handler) Handle(params order.GetOrdersCountParams, i interface{}) middl
 	})
 }
 
-func (h *Handler) prepareCountCondition(_ order.GetOrdersCountParams) *orderModel.GetCountRequest {
-	return &orderModel.GetCountRequest{}
+func (h *Handler) prepareCountCondition(params order.GetOrdersCountParams) *orderModel.GetCountRequest {
+	req := &orderModel.GetCountRequest{}
+
+	if params.Q != nil {
+		req.Q = option.New(*params.Q)
+	}
+
+	return req
 }

@@ -9,7 +9,9 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 )
 
 // NewGetOrdersCountParams creates a new GetOrdersCountParams object
@@ -28,6 +30,11 @@ type GetOrdersCountParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
+
+	/*
+	  In: query
+	*/
+	Q *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -39,8 +46,32 @@ func (o *GetOrdersCountParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	o.HTTPRequest = r
 
+	qs := runtime.Values(r.URL.Query())
+
+	qQ, qhkQ, _ := qs.GetOK("q")
+	if err := o.bindQ(qQ, qhkQ, route.Formats); err != nil {
+		res = append(res, err)
+	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindQ binds and validates parameter Q from query.
+func (o *GetOrdersCountParams) bindQ(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+	o.Q = &raw
+
 	return nil
 }
