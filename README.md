@@ -19,13 +19,19 @@ And also it provides grpc/http api for order.
 - Postgres
 - ElasticSearch
 - Keycloak
-- Fafka
+- Kafka
 
 ## Database migration
-resides in `scripts/migrate/postgres`
+resides in `dev/migrate/postgres`
 
 ## Elastic mappings
-resides in `scripts/migrate/elastic`
+resides in `dev/migrate/elastic`
+
+## DB migrations
+You can start pg migration with command
+```
+$ make migrate.local.up
+```
 
 ## Tests
 You can start tests with command
