@@ -24,7 +24,7 @@ func NewQuerier(esCli es.Client) orderModel.Querier {
 	}
 }
 
-func (q *querier) GetItem(ctx context.Context, filter option.Option[orderModel.Filter]) (*orderModel.Order, error) {
+func (q *querier) GetItem(ctx context.Context, filter *orderModel.Filter) (*orderModel.Order, error) {
 	boolQuery := q.prepareQuery(filter)
 
 	res, err := q.esCli.GetSearch(ctx, &es.GetSearchRequest{
@@ -53,7 +53,7 @@ func (q *querier) GetItem(ctx context.Context, filter option.Option[orderModel.F
 	return orderDto.toModel(), nil
 }
 
-func (q *querier) Count(ctx context.Context, filter option.Option[orderModel.Filter]) (int, error) {
+func (q *querier) Count(ctx context.Context, filter *orderModel.Filter) (int, error) {
 	boolQuery := q.prepareQuery(filter)
 
 	res, err := q.esCli.GetCount(ctx, &es.GetCountRequest{
@@ -67,22 +67,32 @@ func (q *querier) Count(ctx context.Context, filter option.Option[orderModel.Fil
 	return res, nil
 }
 
-func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.Filter], orders option.Option[[]*order.Order], pagination option.Option[paginator.Pagination]) ([]*orderModel.Order, error) {
+func (q *querier) GetList(ctx context.Context, filter *orderModel.Filter, orders []*order.Order, pagination *paginator.Pagination) ([]*orderModel.Order, error) {
 	objects := make([]*orderModel.Order, 0)
 
 	boolQuery := q.prepareQuery(filter)
 
-	esOrders, err := q.prepareOrder(orders.Value())
-	if err != nil {
-		return nil, err
+	orderRes := option.Nil[[]*order.Order]()
+	if len(orders) > 0 {
+		ordersEs, err := q.prepareOrder(orders)
+		if err != nil {
+			return nil, err
+		}
+
+		orderRes = option.New(ordersEs)
+	}
+
+	paginationRes := option.Nil[paginator.Pagination]()
+	if pagination != nil {
+		paginationRes = option.New(*pagination)
 	}
 
 	res, err := q.esCli.GetSearch(ctx, &es.GetSearchRequest{
 		Index:         indexName,
 		Query:         boolQuery,
 		IncludeFields: option.New([]string{"id", "status", "name", "description"}),
-		Orders:        option.New(esOrders),
-		Pagination:    pagination,
+		Orders:        orderRes,
+		Pagination:    paginationRes,
 	})
 	if err != nil {
 		return nil, err
@@ -101,36 +111,35 @@ func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.F
 	return objects, nil
 }
 
-func (q *querier) prepareQuery(filter option.Option[orderModel.Filter]) *elastic.BoolQuery {
+func (q *querier) prepareQuery(filter *orderModel.Filter) *elastic.BoolQuery {
 	boolQuery := elastic.NewBoolQuery()
 
-	if !filter.IsSet() {
+	if filter == nil {
 		return boolQuery
 	}
 
-	filterValue := filter.Value()
 	subQueries := make([]elastic.Query, 0)
 
-	if len(filterValue.IDs.Value()) > 0 {
+	if len(filter.IDs.Value()) > 0 {
 		ids := make([]interface{}, 0)
 
-		for _, id := range filterValue.IDs.Value() {
+		for _, id := range filter.IDs.Value() {
 			ids = append(ids, id)
 		}
 
 		subQueries = append(subQueries, elastic.NewTermsQuery("id", ids...))
 	}
 
-	if filterValue.Status.IsSet() {
-		subQueries = append(subQueries, elastic.NewTermQuery("status", filterValue.Status.Value()))
+	if filter.Status.IsSet() {
+		subQueries = append(subQueries, elastic.NewTermQuery("status", filter.Status.Value()))
 	}
 
-	if filterValue.UserID.IsSet() {
-		subQueries = append(subQueries, elastic.NewTermQuery("user_id", filterValue.UserID.Value()))
+	if filter.UserID.IsSet() {
+		subQueries = append(subQueries, elastic.NewTermQuery("user_id", filter.UserID.Value()))
 	}
 
-	if filterValue.Q.IsSet() {
-		value := filterValue.Q.Value()
+	if filter.Q.IsSet() {
+		value := filter.Q.Value()
 
 		prefixNameQuery := elastic.NewPrefixQuery("name.keyword", value).
 			Boost(18).

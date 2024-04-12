@@ -9,6 +9,9 @@ import (
 	"github.com/krivenkov/order/internal/model"
 	orderModel "github.com/krivenkov/order/internal/model/order"
 	"github.com/krivenkov/pkg/option"
+	"github.com/krivenkov/pkg/order"
+	"github.com/krivenkov/pkg/paginator"
+	"github.com/krivenkov/pkg/ptr"
 	"github.com/krivenkov/pkg/txer"
 	"go.uber.org/fx"
 )
@@ -69,10 +72,10 @@ func (s *service) Create(ctx context.Context, userID string, form *orderModel.Fo
 }
 
 func (s *service) Update(ctx context.Context, userID, id string, form *orderModel.Form) (*orderModel.Order, error) {
-	item, err := s.qrPg.GetItem(ctx, option.New(orderModel.Filter{
+	item, err := s.qrPg.GetItem(ctx, &orderModel.Filter{
 		Status: option.New(int(orderModel.StatusCreated)),
 		IDs:    option.New([]string{id}),
-	}))
+	})
 	if err != nil {
 		return nil, fmt.Errorf("get item: %w", err)
 	}
@@ -102,10 +105,10 @@ func (s *service) Update(ctx context.Context, userID, id string, form *orderMode
 }
 
 func (s *service) SoftDelete(ctx context.Context, userID, id string) error {
-	item, err := s.qrPg.GetItem(ctx, option.New(orderModel.Filter{
+	item, err := s.qrPg.GetItem(ctx, &orderModel.Filter{
 		Status: option.New(int(orderModel.StatusCreated)),
 		IDs:    option.New([]string{id}),
-	}))
+	})
 	if err != nil {
 		return fmt.Errorf("get item: %w", err)
 	}
@@ -153,20 +156,33 @@ func (s *service) Disable(ctx context.Context, userID string) error {
 }
 
 func (s *service) GetList(ctx context.Context, userID string, req *orderModel.GetListRequest) ([]*orderModel.Order, error) {
+	var (
+		orders     []*order.Order
+		pagination *paginator.Pagination
+	)
+
+	if req.Orders.IsSet() {
+		orders = req.Orders.Value()
+	}
+
+	if req.Pagination.IsSet() {
+		pagination = ptr.Pointer(req.Pagination.Value())
+	}
+
 	filter := s.prepareListCondition(userID, req)
 
 	if filter.Q.IsSet() {
-		return s.qrEs.GetList(ctx, option.New(*filter), req.Orders, req.Pagination)
+		return s.qrEs.GetList(ctx, filter, orders, pagination)
 	}
 
-	return s.qrPg.GetList(ctx, option.New(*filter), req.Orders, req.Pagination)
+	return s.qrPg.GetList(ctx, filter, orders, pagination)
 }
 
 func (s *service) GetItem(ctx context.Context, userID string, id string) (*orderModel.Order, error) {
-	item, err := s.qrPg.GetItem(ctx, option.New(orderModel.Filter{
+	item, err := s.qrPg.GetItem(ctx, &orderModel.Filter{
 		Status: option.New(int(orderModel.StatusCreated)),
 		IDs:    option.New([]string{id}),
-	}))
+	})
 	if err != nil {
 		return nil, fmt.Errorf("get item: %w", err)
 	}
@@ -182,17 +198,17 @@ func (s *service) Count(ctx context.Context, userID string, req *orderModel.GetC
 	filter := s.prepareCountCondition(userID, req)
 
 	if filter.Q.IsSet() {
-		return s.qrEs.Count(ctx, option.New(*filter))
+		return s.qrEs.Count(ctx, filter)
 	}
 
-	return s.qrPg.Count(ctx, option.New(*filter))
+	return s.qrPg.Count(ctx, filter)
 }
 
 func (s *service) InnerGetItem(ctx context.Context, req *orderModel.InnerGetItemRequest) (*orderModel.Order, error) {
-	item, err := s.qrPg.GetItem(ctx, option.New(orderModel.Filter{
+	item, err := s.qrPg.GetItem(ctx, &orderModel.Filter{
 		IDs:    req.IDs,
 		UserID: req.UserID,
-	}))
+	})
 	if err != nil {
 		return nil, fmt.Errorf("get item: %w", err)
 	}
@@ -201,9 +217,22 @@ func (s *service) InnerGetItem(ctx context.Context, req *orderModel.InnerGetItem
 }
 
 func (s *service) InnerGetList(ctx context.Context, req *orderModel.InnerGetListRequest) ([]*orderModel.Order, error) {
+	var (
+		orders     []*order.Order
+		pagination *paginator.Pagination
+	)
+
+	if req.Orders.IsSet() {
+		orders = req.Orders.Value()
+	}
+
+	if req.Pagination.IsSet() {
+		pagination = ptr.Pointer(req.Pagination.Value())
+	}
+
 	filter := s.prepareInnerListCondition(req)
 
-	return s.qrPg.GetList(ctx, option.New(*filter), req.Orders, req.Pagination)
+	return s.qrPg.GetList(ctx, filter, orders, pagination)
 }
 
 func (s *service) prepareInnerListCondition(req *orderModel.InnerGetListRequest) *orderModel.Filter {

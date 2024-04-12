@@ -9,7 +9,6 @@ import (
 	"github.com/krivenkov/order/internal/model"
 	orderModel "github.com/krivenkov/order/internal/model/order"
 	"github.com/krivenkov/pkg/clients/database"
-	"github.com/krivenkov/pkg/option"
 	"github.com/krivenkov/pkg/order"
 	"github.com/krivenkov/pkg/paginator"
 )
@@ -24,7 +23,7 @@ func NewQuerier(tXer *database.TXer) orderModel.Querier {
 	}
 }
 
-func (q *querier) GetItem(ctx context.Context, filter option.Option[orderModel.Filter]) (*orderModel.Order, error) {
+func (q *querier) GetItem(ctx context.Context, filter *orderModel.Filter) (*orderModel.Order, error) {
 	sb := pgBuilder.Select(newDto().columns()...)
 	sb = q.prepareBase(sb, filter)
 
@@ -64,7 +63,7 @@ func (q *querier) GetItem(ctx context.Context, filter option.Option[orderModel.F
 	return d.toModel(), nil
 }
 
-func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.Filter], orders option.Option[[]*order.Order], pagination option.Option[paginator.Pagination]) ([]*orderModel.Order, error) {
+func (q *querier) GetList(ctx context.Context, filter *orderModel.Filter, orders []*order.Order, pagination *paginator.Pagination) ([]*orderModel.Order, error) {
 	sb := pgBuilder.Select(newDto().columns()...)
 	sb, errPrep := q.prepare(sb, filter, orders, pagination)
 	if errPrep != nil {
@@ -103,7 +102,7 @@ func (q *querier) GetList(ctx context.Context, filter option.Option[orderModel.F
 	return res, nil
 }
 
-func (q *querier) Count(ctx context.Context, filter option.Option[orderModel.Filter]) (int, error) {
+func (q *querier) Count(ctx context.Context, filter *orderModel.Filter) (int, error) {
 	sb := pgBuilder.Select("COUNT(*)")
 	sb = q.prepareBase(sb, filter)
 
@@ -131,15 +130,11 @@ func (q *querier) Count(ctx context.Context, filter option.Option[orderModel.Fil
 
 var pgBuilder = squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)
 
-func (q *querier) prepare(sb squirrel.SelectBuilder, filter option.Option[orderModel.Filter], orders option.Option[[]*order.Order], pagination option.Option[paginator.Pagination]) (squirrel.SelectBuilder, error) {
+func (q *querier) prepare(sb squirrel.SelectBuilder, filter *orderModel.Filter, orders []*order.Order, pagination *paginator.Pagination) (squirrel.SelectBuilder, error) {
 	sb = q.prepareBase(sb, filter)
 
-	if !filter.IsSet() {
-		return sb, nil
-	}
-
-	if orders.IsSet() {
-		prepareOrders, err := q.prepareOrder(orders.Value())
+	if len(orders) > 0 {
+		prepareOrders, err := q.prepareOrder(orders)
 		if err != nil {
 			return sb, err
 		}
@@ -152,28 +147,27 @@ func (q *querier) prepare(sb squirrel.SelectBuilder, filter option.Option[orderM
 		sb = sb.OrderBy(ordersStr...)
 	}
 
-	if pagination.IsSet() {
-		sb = sb.Offset(uint64(pagination.Value().Offset)).Limit(uint64(pagination.Value().Limit))
+	if pagination != nil {
+		sb = sb.Offset(uint64(pagination.Offset)).Limit(uint64(pagination.Limit))
 	}
 
 	return sb, nil
 }
 
-func (q *querier) prepareBase(builder squirrel.SelectBuilder, filter option.Option[orderModel.Filter]) squirrel.SelectBuilder {
+func (q *querier) prepareBase(builder squirrel.SelectBuilder, filter *orderModel.Filter) squirrel.SelectBuilder {
 	where := squirrel.And{}
 
-	if filter.IsSet() {
-		filterValue := filter.Value()
-		if filterValue.IDs.IsSet() {
-			where = append(where, squirrel.Eq{"id": filterValue.IDs.Value()})
+	if filter != nil {
+		if filter.IDs.IsSet() {
+			where = append(where, squirrel.Eq{"id": filter.IDs.Value()})
 		}
 
-		if filterValue.Status.IsSet() {
-			where = append(where, squirrel.Eq{"status": filterValue.Status.Value()})
+		if filter.Status.IsSet() {
+			where = append(where, squirrel.Eq{"status": filter.Status.Value()})
 		}
 
-		if filterValue.UserID.IsSet() {
-			where = append(where, squirrel.Eq{"user_id": filterValue.UserID.Value()})
+		if filter.UserID.IsSet() {
+			where = append(where, squirrel.Eq{"user_id": filter.UserID.Value()})
 		}
 	}
 
