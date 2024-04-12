@@ -46,7 +46,7 @@ func (o *Order) FillForm(f *Form) {
 	}
 
 	if f.Description != nil {
-		o.Name = *f.Description
+		o.Description = *f.Description
 	}
 }
 

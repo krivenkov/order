@@ -17,8 +17,9 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/jackc/pgx/v4 v4.18.3
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/krivenkov/pkg v0.0.5
+	github.com/krivenkov/pkg v0.0.6
 	github.com/olivere/elastic/v7 v7.0.32
+	github.com/stretchr/testify v1.9.0
 	go.uber.org/fx v1.21.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/net v0.21.0
@@ -30,6 +31,7 @@ require (
 	github.com/Nerzal/gocloak/v6 v6.4.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/caarlos0/env/v6 v6.10.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/go-openapi/analysis v0.23.0 // indirect
@@ -56,6 +58,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.19 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/segmentio/ksuid v1.0.4 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/twmb/franz-go v1.16.1 // indirect
