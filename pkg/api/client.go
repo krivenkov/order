@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-//go:generate mockgen -source=collection.api.pb.go -package=mock -destination=mock/collection.api.pb.go
+//go:generate mockgen -source=order.api.pb.go -package=mock -destination=mock/order.api.pb.go
 
 type ClientConfig struct {
 	Addr string `json:"addr" yaml:"addr" env:"ADDR"`
