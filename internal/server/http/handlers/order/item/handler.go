@@ -62,7 +62,7 @@ func (h *Handler) Handle(params order.GetOrderParams, i interface{}) middleware.
 
 		return order.NewGetOrderInternalServerError().WithPayload(&models.Error{
 			Error:            ptr.Pointer(models.ErrorErrorServerError),
-			ErrorDescription: ptr.Pointer("Get Order Failed"),
+			ErrorDescription: ptr.Pointer("Get order failed"),
 		})
 	}
 
