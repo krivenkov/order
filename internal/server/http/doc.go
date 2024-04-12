@@ -6,7 +6,7 @@
 //	Schemes:
 //	  https
 //	Host: 127.0.0.1
-//	BasePath: /order
+//	BasePath: /api/v1/order
 //	Version: 1.0.1
 //
 //	Consumes:

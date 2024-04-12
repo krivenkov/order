@@ -39,7 +39,7 @@ func (o *GetOrdersCountURL) Build() (*url.URL, error) {
 
 	_basePath := o._basePath
 	if _basePath == "" {
-		_basePath = "/order"
+		_basePath = "/api/v1/order"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 

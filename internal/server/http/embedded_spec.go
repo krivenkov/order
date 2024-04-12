@@ -28,7 +28,7 @@ func init() {
     "version": "1.0.1"
   },
   "host": "127.0.0.1",
-  "basePath": "/order",
+  "basePath": "/api/v1/order",
   "paths": {
     "/": {
       "get": {
@@ -569,7 +569,7 @@ func init() {
     "version": "1.0.1"
   },
   "host": "127.0.0.1",
-  "basePath": "/order",
+  "basePath": "/api/v1/order",
   "paths": {
     "/": {
       "get": {
